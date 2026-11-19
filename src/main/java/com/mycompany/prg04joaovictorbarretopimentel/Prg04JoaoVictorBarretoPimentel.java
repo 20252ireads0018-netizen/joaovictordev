@@ -15,11 +15,6 @@ import br.com.ifba.produto.view.TelaProdutos;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-/**
- * Ponto de entrada do PGCD. Aplica as migrations do Flyway e monta as camadas:
- * e o unico lugar que cria objetos com new; cada camada recebe a de baixo
- * pelo construtor (DAO -> Service -> Controller -> Tela).
- */
 public class Prg04JoaoVictorBarretoPimentel {
 
     public static void main(String[] args) {

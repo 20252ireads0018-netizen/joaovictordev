@@ -10,7 +10,6 @@ import br.com.ifba.produto.entity.Categoria;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-/** Regras de negocio de Categoria testadas com o FakeCategoriaDao, sem banco. */
 class CategoriaServiceTest {
 
     private FakeCategoriaDao dao;

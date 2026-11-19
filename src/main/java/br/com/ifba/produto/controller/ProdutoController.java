@@ -4,7 +4,6 @@ import br.com.ifba.produto.entity.Produto;
 import br.com.ifba.produto.service.ProdutoIService;
 import java.util.List;
 
-/** Repassa os pedidos da tela para o servico. O servico chega pelo construtor. */
 public class ProdutoController implements ProdutoIController {
 
     private final ProdutoIService service;

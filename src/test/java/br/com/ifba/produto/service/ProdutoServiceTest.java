@@ -11,7 +11,6 @@ import java.math.BigDecimal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-/** Regras de negocio de Produto testadas com o FakeProdutoDao, sem banco. */
 class ProdutoServiceTest {
 
     private FakeProdutoDao dao;

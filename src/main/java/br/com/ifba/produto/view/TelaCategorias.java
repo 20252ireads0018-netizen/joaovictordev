@@ -21,10 +21,6 @@ import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
 
-/**
- * Tela de CRUD de categorias (cadastrar, listar, editar, excluir).
- * Fala apenas com o controller, recebido pelo construtor.
- */
 public class TelaCategorias extends JFrame {
 
     private static final Logger LOGGER = Logger.getLogger(TelaCategorias.class.getName());
@@ -40,7 +36,6 @@ public class TelaCategorias extends JFrame {
     };
     private final JTable tabela = new JTable(modelo);
 
-    /** ID da categoria selecionada; null quando e um cadastro novo. */
     private Long idSelecionado;
 
     public TelaCategorias(CategoriaIController controller) {
@@ -50,7 +45,6 @@ public class TelaCategorias extends JFrame {
         setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
     }
 
-    /** Mostra a tela com a lista atualizada. */
     public void abrir() {
         carregarTabela();
         setVisible(true);

@@ -6,10 +6,6 @@ import br.com.ifba.produto.entity.Categoria;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Regras de negocio de Categoria: nome obrigatorio, com tamanho limitado e
- * sem repeticao. O DAO chega pelo construtor.
- */
 public class CategoriaService implements CategoriaIService {
 
     static final int TAMANHO_MAXIMO_NOME = 80;

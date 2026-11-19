@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/** Dublê do DAO de Categoria: guarda as categorias em uma List, sem banco. */
 class FakeCategoriaDao implements CategoriaIDao {
 
     final List<Categoria> categorias = new ArrayList<>();

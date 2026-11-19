@@ -3,7 +3,6 @@ package br.com.ifba.produto.service;
 import br.com.ifba.produto.entity.Produto;
 import java.util.List;
 
-/** Regras de negocio de Produto. */
 public interface ProdutoIService {
 
     Produto save(Produto produto);

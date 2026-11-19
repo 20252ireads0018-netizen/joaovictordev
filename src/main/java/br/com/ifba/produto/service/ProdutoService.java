@@ -5,10 +5,6 @@ import br.com.ifba.produto.dao.ProdutoIDao;
 import br.com.ifba.produto.entity.Produto;
 import java.util.List;
 
-/**
- * Concentra as regras de negocio de Produto que antes ficavam na tela.
- * O DAO chega pelo construtor: o servico nao cria a propria dependencia.
- */
 public class ProdutoService implements ProdutoIService {
 
     static final int TAMANHO_MAXIMO_NOME = 120;

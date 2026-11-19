@@ -24,13 +24,6 @@ import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
 
-/**
- * Tela de CRUD de produtos (cadastrar, listar, buscar, editar, excluir).
- *
- * A tela so conhece o controller, recebido pelo construtor. As regras de
- * negocio (nome obrigatorio, preco e estoque nao negativos) ficam no service;
- * aqui so se converte o texto digitado em numero.
- */
 public class TelaProdutos extends JFrame {
 
     private static final Logger LOGGER = Logger.getLogger(TelaProdutos.class.getName());
@@ -52,7 +45,6 @@ public class TelaProdutos extends JFrame {
     };
     private final JTable tabela = new JTable(modelo);
 
-    /** ID do produto selecionado na tabela; null quando e um cadastro novo. */
     private Long idSelecionado;
 
     public TelaProdutos(ProdutoIController controller, TelaCategorias telaCategorias) {
@@ -60,7 +52,6 @@ public class TelaProdutos extends JFrame {
         this.controller = controller;
         this.telaCategorias = telaCategorias;
         montarTela();
-        // Ao fechar, a aplicacao encerra e o shutdown hook do main fecha o JPA.
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         carregarTabela(controller::findAll);
     }
@@ -125,7 +116,6 @@ public class TelaProdutos extends JFrame {
         setLocationRelativeTo(null);
     }
 
-    // ---------- operacoes ----------
 
     private void cadastrar() {
         try {
@@ -188,7 +178,6 @@ public class TelaProdutos extends JFrame {
         carregarTabela(() -> controller.findByNome(termo));
     }
 
-    // ---------- apoio ----------
 
     private void carregarTabela(Supplier<List<Produto>> consulta) {
         try {
@@ -204,7 +193,6 @@ public class TelaProdutos extends JFrame {
         }
     }
 
-    /** Converte os campos da tela em um Produto. Validacoes de negocio ficam no service. */
     private Produto lerFormulario() {
         BigDecimal preco = null;
         String textoPreco = txtPreco.getText().trim();

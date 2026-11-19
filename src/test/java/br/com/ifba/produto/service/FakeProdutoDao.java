@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-/** Dublê do DAO de Produto: guarda os produtos em uma List, sem banco. */
 class FakeProdutoDao implements ProdutoIDao {
 
     final List<Produto> produtos = new ArrayList<>();
