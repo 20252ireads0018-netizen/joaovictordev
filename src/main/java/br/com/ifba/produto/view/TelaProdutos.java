@@ -2,8 +2,8 @@ package br.com.ifba.produto.view;
 
 import br.com.ifba.infrastructure.exception.EntidadeNaoEncontradaException;
 import br.com.ifba.infrastructure.exception.PersistenciaException;
-import br.com.ifba.produto.dao.ProdutoDao;
-import br.com.ifba.produto.dao.ProdutoIDao;
+import br.com.ifba.infrastructure.exception.RegraNegocioException;
+import br.com.ifba.produto.controller.ProdutoIController;
 import br.com.ifba.produto.entity.Produto;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -24,18 +24,12 @@ import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
 
-/**
- * Tela de CRUD de produtos (cadastrar, listar, buscar, editar, excluir).
- *
- * A tela nao conhece o JPA (nem transacao, nem sessao): ela apenas chama o DAO
- * (dao.save, dao.update, dao.delete, dao.findAll, dao.findByNome) e trata a
- * excecao de dominio (PersistenciaException) que ele lanca quando algo falha.
- */
 public class TelaProdutos extends JFrame {
 
     private static final Logger LOGGER = Logger.getLogger(TelaProdutos.class.getName());
 
-    private final ProdutoIDao dao = new ProdutoDao();
+    private final ProdutoIController controller;
+    private final TelaCategorias telaCategorias;
 
     private final JTextField txtBusca = new JTextField(20);
     private final JTextField txtNome = new JTextField();
@@ -51,25 +45,27 @@ public class TelaProdutos extends JFrame {
     };
     private final JTable tabela = new JTable(modelo);
 
-    /** ID do produto selecionado na tabela; null quando e um cadastro novo. */
     private Long idSelecionado;
 
-    public TelaProdutos() {
+    public TelaProdutos(ProdutoIController controller, TelaCategorias telaCategorias) {
         super("Produtos - PGCD");
+        this.controller = controller;
+        this.telaCategorias = telaCategorias;
         montarTela();
-        // Ao fechar, a aplicacao encerra e o shutdown hook do main fecha o JPA.
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        carregarTabela(dao::findAll);
+        carregarTabela(controller::findAll);
     }
 
     private void montarTela() {
         JPanel busca = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JButton btnBuscar = new JButton("Buscar por nome");
         JButton btnTodos = new JButton("Listar todos");
+        JButton btnCategorias = new JButton("Categorias");
         busca.add(new JLabel("Nome:"));
         busca.add(txtBusca);
         busca.add(btnBuscar);
         busca.add(btnTodos);
+        busca.add(btnCategorias);
 
         JPanel form = new JPanel(new GridLayout(4, 2, 6, 6));
         form.add(new JLabel("Nome:"));
@@ -103,8 +99,9 @@ public class TelaProdutos extends JFrame {
         btnBuscar.addActionListener(e -> buscar());
         btnTodos.addActionListener(e -> {
             txtBusca.setText("");
-            carregarTabela(dao::findAll);
+            carregarTabela(controller::findAll);
         });
+        btnCategorias.addActionListener(e -> telaCategorias.abrir());
         btnCadastrar.addActionListener(e -> cadastrar());
         btnEditar.addActionListener(e -> editar());
         btnExcluir.addActionListener(e -> excluir());
@@ -115,20 +112,18 @@ public class TelaProdutos extends JFrame {
             }
         });
 
-        setSize(720, 520);
+        setSize(760, 520);
         setLocationRelativeTo(null);
     }
 
-    // ---------- operacoes ----------
 
     private void cadastrar() {
         try {
-            Produto produto = lerFormulario();
-            dao.save(produto);
+            controller.save(lerFormulario());
             JOptionPane.showMessageDialog(this, "Produto cadastrado com sucesso!");
             limparFormulario();
-            carregarTabela(dao::findAll);
-        } catch (IllegalArgumentException e) {
+            carregarTabela(controller::findAll);
+        } catch (IllegalArgumentException | RegraNegocioException e) {
             avisar(e.getMessage());
         } catch (PersistenciaException e) {
             erro("cadastrar o produto", e);
@@ -136,22 +131,18 @@ public class TelaProdutos extends JFrame {
     }
 
     private void editar() {
-        if (idSelecionado == null) {
-            avisar("Selecione um produto na tabela para editar.");
-            return;
-        }
         try {
             Produto produto = lerFormulario();
             produto.setId(idSelecionado);
-            dao.update(produto);
+            controller.update(produto);
             JOptionPane.showMessageDialog(this, "Produto atualizado com sucesso!");
             limparFormulario();
-            carregarTabela(dao::findAll);
+            carregarTabela(controller::findAll);
         } catch (EntidadeNaoEncontradaException e) {
             avisar(e.getMessage());
             limparFormulario();
-            carregarTabela(dao::findAll);
-        } catch (IllegalArgumentException e) {
+            carregarTabela(controller::findAll);
+        } catch (IllegalArgumentException | RegraNegocioException e) {
             avisar(e.getMessage());
         } catch (PersistenciaException e) {
             erro("atualizar o produto", e);
@@ -159,40 +150,34 @@ public class TelaProdutos extends JFrame {
     }
 
     private void excluir() {
-        if (idSelecionado == null) {
-            avisar("Selecione um produto na tabela para excluir.");
-            return;
-        }
-        int resposta = JOptionPane.showConfirmDialog(this,
-                "Excluir o produto selecionado?", "Confirmar exclusão", JOptionPane.YES_NO_OPTION);
-        if (resposta != JOptionPane.YES_OPTION) {
-            return;
+        if (idSelecionado != null) {
+            int resposta = JOptionPane.showConfirmDialog(this,
+                    "Excluir o produto selecionado?", "Confirmar exclusão", JOptionPane.YES_NO_OPTION);
+            if (resposta != JOptionPane.YES_OPTION) {
+                return;
+            }
         }
         try {
             Produto produto = new Produto();
             produto.setId(idSelecionado);
-            dao.delete(produto);
+            controller.delete(produto);
             JOptionPane.showMessageDialog(this, "Produto excluído com sucesso!");
-        } catch (EntidadeNaoEncontradaException e) {
+        } catch (RegraNegocioException | EntidadeNaoEncontradaException e) {
             avisar(e.getMessage());
+            return;
         } catch (PersistenciaException e) {
             erro("excluir o produto", e);
             return;
         }
         limparFormulario();
-        carregarTabela(dao::findAll);
+        carregarTabela(controller::findAll);
     }
 
     private void buscar() {
         String termo = txtBusca.getText();
-        if (termo.isBlank()) {
-            avisar("Digite parte do nome para buscar.");
-            return;
-        }
-        carregarTabela(() -> dao.findByNome(termo));
+        carregarTabela(() -> controller.findByNome(termo));
     }
 
-    // ---------- apoio ----------
 
     private void carregarTabela(Supplier<List<Produto>> consulta) {
         try {
@@ -201,32 +186,33 @@ public class TelaProdutos extends JFrame {
             for (Produto p : produtos) {
                 modelo.addRow(new Object[]{p.getId(), p.getNome(), p.getFornecedor(), p.getPreco(), p.getEstoque()});
             }
+        } catch (RegraNegocioException e) {
+            avisar(e.getMessage());
         } catch (PersistenciaException e) {
             erro("carregar os produtos", e);
         }
     }
 
     private Produto lerFormulario() {
-        String nome = txtNome.getText().trim();
-        if (nome.isEmpty()) {
-            throw new IllegalArgumentException("Informe o nome do produto.");
+        BigDecimal preco = null;
+        String textoPreco = txtPreco.getText().trim();
+        if (!textoPreco.isEmpty()) {
+            try {
+                preco = new BigDecimal(textoPreco.replace(',', '.'));
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Preço inválido. Use apenas números, ex.: 19,90.");
+            }
         }
-        BigDecimal preco;
-        int estoque;
-        try {
-            preco = new BigDecimal(txtPreco.getText().trim().replace(',', '.'));
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Preço inválido. Use apenas números, ex.: 19,90.");
+        int estoque = 0;
+        String textoEstoque = txtEstoque.getText().trim();
+        if (!textoEstoque.isEmpty()) {
+            try {
+                estoque = Integer.parseInt(textoEstoque);
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Estoque inválido. Use um número inteiro.");
+            }
         }
-        try {
-            estoque = Integer.parseInt(txtEstoque.getText().trim());
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Estoque inválido. Use um número inteiro.");
-        }
-        if (preco.signum() < 0 || estoque < 0) {
-            throw new IllegalArgumentException("Preço e estoque não podem ser negativos.");
-        }
-        return new Produto(nome, txtFornecedor.getText().trim(), preco, estoque);
+        return new Produto(txtNome.getText(), txtFornecedor.getText(), preco, estoque);
     }
 
     private void preencherFormularioComSelecao() {

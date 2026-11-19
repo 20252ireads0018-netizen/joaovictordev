@@ -2,14 +2,19 @@ package com.mycompany.prg04joaovictorbarretopimentel;
 
 import br.com.ifba.infrastructure.util.JPAUtil;
 import br.com.ifba.infrastructure.util.MigracaoBanco;
+import br.com.ifba.produto.controller.CategoriaController;
+import br.com.ifba.produto.controller.CategoriaIController;
+import br.com.ifba.produto.controller.ProdutoController;
+import br.com.ifba.produto.controller.ProdutoIController;
+import br.com.ifba.produto.dao.CategoriaDao;
+import br.com.ifba.produto.dao.ProdutoDao;
+import br.com.ifba.produto.service.CategoriaService;
+import br.com.ifba.produto.service.ProdutoService;
+import br.com.ifba.produto.view.TelaCategorias;
 import br.com.ifba.produto.view.TelaProdutos;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-/**
- * Ponto de entrada do PGCD. Antes de abrir qualquer tela, aplica as migrations
- * do Flyway; so entao o Hibernate (hbm2ddl.auto=validate) confere o schema.
- */
 public class Prg04JoaoVictorBarretoPimentel {
 
     public static void main(String[] args) {
@@ -26,6 +31,13 @@ public class Prg04JoaoVictorBarretoPimentel {
         }
 
         Runtime.getRuntime().addShutdownHook(new Thread(JPAUtil::close));
-        SwingUtilities.invokeLater(() -> new TelaProdutos().setVisible(true));
+
+        ProdutoIController produtoController = new ProdutoController(new ProdutoService(new ProdutoDao()));
+        CategoriaIController categoriaController = new CategoriaController(new CategoriaService(new CategoriaDao()));
+
+        SwingUtilities.invokeLater(() -> {
+            TelaCategorias telaCategorias = new TelaCategorias(categoriaController);
+            new TelaProdutos(produtoController, telaCategorias).setVisible(true);
+        });
     }
 }
