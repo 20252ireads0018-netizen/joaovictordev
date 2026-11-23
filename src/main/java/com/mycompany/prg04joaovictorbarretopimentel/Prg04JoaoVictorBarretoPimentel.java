@@ -37,7 +37,7 @@ public class Prg04JoaoVictorBarretoPimentel {
 
         SwingUtilities.invokeLater(() -> {
             TelaCategorias telaCategorias = new TelaCategorias(categoriaController);
-            new TelaProdutos(produtoController, telaCategorias).setVisible(true);
+            new TelaProdutos(produtoController, telaCategorias::abrir).setVisible(true);
         });
     }
 }

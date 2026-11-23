@@ -46,8 +46,8 @@ class FakeProdutoDao implements ProdutoIDao {
 
     @Override
     public List<Produto> findByNome(String termo) {
-        String t = termo.toLowerCase();
-        return produtos.stream().filter(p -> p.getNome().toLowerCase().contains(t)).toList();
+        String termoMinusculo = termo.toLowerCase();
+        return produtos.stream().filter(p -> p.getNome().toLowerCase().contains(termoMinusculo)).toList();
     }
 
     @Override

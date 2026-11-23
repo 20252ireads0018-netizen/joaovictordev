@@ -29,7 +29,7 @@ public class TelaProdutos extends JFrame {
     private static final Logger LOGGER = Logger.getLogger(TelaProdutos.class.getName());
 
     private final ProdutoIController controller;
-    private final TelaCategorias telaCategorias;
+    private final Runnable abrirCategorias;
 
     private final JTextField txtBusca = new JTextField(20);
     private final JTextField txtNome = new JTextField();
@@ -47,10 +47,10 @@ public class TelaProdutos extends JFrame {
 
     private Long idSelecionado;
 
-    public TelaProdutos(ProdutoIController controller, TelaCategorias telaCategorias) {
+    public TelaProdutos(ProdutoIController controller, Runnable abrirCategorias) {
         super("Produtos - PGCD");
         this.controller = controller;
-        this.telaCategorias = telaCategorias;
+        this.abrirCategorias = abrirCategorias;
         montarTela();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         carregarTabela(controller::findAll);
@@ -101,7 +101,7 @@ public class TelaProdutos extends JFrame {
             txtBusca.setText("");
             carregarTabela(controller::findAll);
         });
-        btnCategorias.addActionListener(e -> telaCategorias.abrir());
+        btnCategorias.addActionListener(e -> abrirCategorias.run());
         btnCadastrar.addActionListener(e -> cadastrar());
         btnEditar.addActionListener(e -> editar());
         btnExcluir.addActionListener(e -> excluir());

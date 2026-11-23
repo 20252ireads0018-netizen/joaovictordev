@@ -43,7 +43,7 @@ class ProdutoDaoTest {
         JPAUtil.close();
     }
 
-    private Produto novo(String nome) {
+    private Produto novoProduto(String nome) {
         return new Produto(nome, "Fornecedor X", new BigDecimal("10.00"), 5);
     }
 
@@ -77,20 +77,20 @@ class ProdutoDaoTest {
 
     @Test
     void updateInexistenteLancaExcecao() {
-        Produto fantasma = novo("Fantasma");
+        Produto fantasma = novoProduto("Fantasma");
         fantasma.setId(999L);
         assertThrows(EntidadeNaoEncontradaException.class, () -> dao.update(fantasma));
     }
 
     @Test
     void deleteInexistenteLancaExcecao() {
-        Produto fantasma = novo("Fantasma");
+        Produto fantasma = novoProduto("Fantasma");
         fantasma.setId(999L);
         assertThrows(EntidadeNaoEncontradaException.class, () -> dao.delete(fantasma));
     }
 
     @Test
-    void excecaoDeDominioEsconde0Jpa() {
+    void entidadeNaoEncontradaEhUmaPersistenciaException() {
         // A tela so precisa tratar PersistenciaException; EntidadeNaoEncontrada e um caso dela.
         assertTrue(PersistenciaException.class.isAssignableFrom(EntidadeNaoEncontradaException.class));
     }
@@ -99,7 +99,7 @@ class ProdutoDaoTest {
 
     @Test
     void savePreencheIdEFindByIdEncontra() {
-        Produto salvo = dao.save(novo("Mouse"));
+        Produto salvo = dao.save(novoProduto("Mouse"));
         assertNotNull(salvo.getId());
         assertDoesNotThrow(() -> dao.findById(salvo.getId()));
         assertEquals("Mouse", dao.findById(salvo.getId()).getNome());
@@ -107,7 +107,7 @@ class ProdutoDaoTest {
 
     @Test
     void updateExistenteGravaAlteracao() {
-        Produto salvo = dao.save(novo("Teclado"));
+        Produto salvo = dao.save(novoProduto("Teclado"));
         salvo.setNome("Teclado Gamer");
         assertDoesNotThrow(() -> dao.update(salvo));
         assertEquals("Teclado Gamer", dao.findById(salvo.getId()).getNome());
@@ -115,15 +115,15 @@ class ProdutoDaoTest {
 
     @Test
     void deleteExistenteRemove() {
-        Produto salvo = dao.save(novo("Monitor"));
+        Produto salvo = dao.save(novoProduto("Monitor"));
         assertDoesNotThrow(() -> dao.delete(salvo));
         assertThrows(EntidadeNaoEncontradaException.class, () -> dao.findById(salvo.getId()));
     }
 
     @Test
     void findAllListaOrdenadoPorNome() {
-        dao.save(novo("Teclado"));
-        dao.save(novo("Mouse"));
+        dao.save(novoProduto("Teclado"));
+        dao.save(novoProduto("Mouse"));
         List<Produto> todos = dao.findAll();
         assertEquals(2, todos.size());
         assertEquals("Mouse", todos.get(0).getNome());
@@ -133,8 +133,8 @@ class ProdutoDaoTest {
 
     @Test
     void findByNomeUsaJpqlSemDiferenciarCaixa() {
-        dao.save(novo("Mouse Sem Fio"));
-        dao.save(novo("Teclado"));
+        dao.save(novoProduto("Mouse Sem Fio"));
+        dao.save(novoProduto("Teclado"));
         List<Produto> achados = dao.findByNome("MOUSE");
         assertEquals(1, achados.size());
         assertEquals("Mouse Sem Fio", achados.get(0).getNome());
@@ -142,10 +142,10 @@ class ProdutoDaoTest {
 
     @Test
     void findComEstoqueAbaixoDeFiltraPeloLimite() {
-        Produto acabando = novo("Cabo HDMI");
+        Produto acabando = novoProduto("Cabo HDMI");
         acabando.setEstoque(1);
         dao.save(acabando);
-        dao.save(novo("Webcam"));
+        dao.save(novoProduto("Webcam"));
         List<Produto> repor = dao.findComEstoqueAbaixoDe(3);
         assertEquals(1, repor.size());
         assertEquals("Cabo HDMI", repor.get(0).getNome());
