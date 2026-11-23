@@ -22,26 +22,26 @@ class ProdutoServiceTest {
         service = new ProdutoService(dao);
     }
 
-    private Produto produto(String nome, String preco, int estoque) {
+    private Produto novoProduto(String nome, String preco, int estoque) {
         return new Produto(nome, "Fornecedor X", preco == null ? null : new BigDecimal(preco), estoque);
     }
 
     @Test
     void salvarProdutoValidoGravaNoDao() {
-        Produto salvo = service.save(produto("Mouse", "49.90", 10));
+        Produto salvo = service.save(novoProduto("Mouse", "49.90", 10));
         assertNotNull(salvo.getId());
         assertEquals(1, dao.produtos.size());
     }
 
     @Test
     void salvarRemoveEspacosDoNome() {
-        Produto salvo = service.save(produto("  Teclado  ", "120.00", 3));
+        Produto salvo = service.save(novoProduto("  Teclado  ", "120.00", 3));
         assertEquals("Teclado", salvo.getNome());
     }
 
     @Test
     void nomeVazioNaoESalvo() {
-        RegraNegocioException e = assertThrows(RegraNegocioException.class, () -> service.save(produto("   ", "10.00", 1)));
+        RegraNegocioException e = assertThrows(RegraNegocioException.class, () -> service.save(novoProduto("   ", "10.00", 1)));
         assertEquals("Informe o nome do produto.", e.getMessage());
         assertTrue(dao.produtos.isEmpty());
     }
@@ -49,41 +49,41 @@ class ProdutoServiceTest {
     @Test
     void nomeMuitoLongoNaoESalvo() {
         String nome = "a".repeat(ProdutoService.TAMANHO_MAXIMO_NOME + 1);
-        assertThrows(RegraNegocioException.class, () -> service.save(produto(nome, "10.00", 1)));
+        assertThrows(RegraNegocioException.class, () -> service.save(novoProduto(nome, "10.00", 1)));
     }
 
     @Test
-    void precoObrigatorio() {
-        assertThrows(RegraNegocioException.class, () -> service.save(produto("Cabo", null, 1)));
+    void precoNuloNaoESalvo() {
+        assertThrows(RegraNegocioException.class, () -> service.save(novoProduto("Cabo", null, 1)));
     }
 
     @Test
     void precoNegativoNaoESalvo() {
-        RegraNegocioException e = assertThrows(RegraNegocioException.class, () -> service.save(produto("Cabo", "-1.00", 1)));
+        RegraNegocioException e = assertThrows(RegraNegocioException.class, () -> service.save(novoProduto("Cabo", "-1.00", 1)));
         assertEquals("O preço não pode ser negativo.", e.getMessage());
     }
 
     @Test
     void estoqueNegativoNaoESalvo() {
-        RegraNegocioException e = assertThrows(RegraNegocioException.class, () -> service.save(produto("Cabo", "5.00", -2)));
+        RegraNegocioException e = assertThrows(RegraNegocioException.class, () -> service.save(novoProduto("Cabo", "5.00", -2)));
         assertEquals("O estoque não pode ser negativo.", e.getMessage());
     }
 
     @Test
     void precoZeroEEstoqueZeroSaoPermitidos() {
-        Produto salvo = service.save(produto("Brinde", "0", 0));
+        Produto salvo = service.save(novoProduto("Brinde", "0", 0));
         assertNotNull(salvo.getId());
     }
 
     @Test
     void editarSemIdLancaExcecao() {
-        assertThrows(RegraNegocioException.class, () -> service.update(produto("Mouse", "10.00", 1)));
+        assertThrows(RegraNegocioException.class, () -> service.update(novoProduto("Mouse", "10.00", 1)));
     }
 
     @Test
     void editarProdutoExistenteAtualizaNoDao() {
-        Produto salvo = service.save(produto("Mouse", "10.00", 1));
-        Produto alterado = produto("Mouse Gamer", "99.90", 5);
+        Produto salvo = service.save(novoProduto("Mouse", "10.00", 1));
+        Produto alterado = novoProduto("Mouse Gamer", "99.90", 5);
         alterado.setId(salvo.getId());
         service.update(alterado);
         assertEquals("Mouse Gamer", dao.findById(salvo.getId()).getNome());
@@ -96,7 +96,7 @@ class ProdutoServiceTest {
 
     @Test
     void excluirRemoveDoDao() {
-        Produto salvo = service.save(produto("Monitor", "800.00", 2));
+        Produto salvo = service.save(novoProduto("Monitor", "800.00", 2));
         service.delete(salvo);
         assertTrue(dao.produtos.isEmpty());
     }
@@ -108,8 +108,8 @@ class ProdutoServiceTest {
 
     @Test
     void buscaPorNomeRepassaTermoSemEspacos() {
-        service.save(produto("Mouse sem fio", "50.00", 1));
-        service.save(produto("Teclado", "80.00", 1));
+        service.save(novoProduto("Mouse sem fio", "50.00", 1));
+        service.save(novoProduto("Teclado", "80.00", 1));
         assertEquals(1, service.findByNome("  mouse ").size());
     }
 

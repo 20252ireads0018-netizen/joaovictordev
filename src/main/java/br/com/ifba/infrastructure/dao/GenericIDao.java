@@ -20,7 +20,10 @@ public interface GenericIDao<Entity extends PersistenceEntity> {
     /** Remove a entidade do banco. */
     void delete(Entity entity);
 
-    /** Busca pelo identificador. */
+    /**
+     * Lanca EntidadeNaoEncontradaException em vez de devolver null: assim quem
+     * chama nao precisa testar null, e a tela mostra a mensagem do proprio DAO.
+     */
     Entity findById(Long id);
 
     /** Lista todas as entidades do tipo. */
