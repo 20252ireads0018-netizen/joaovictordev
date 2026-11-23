@@ -4,6 +4,7 @@
  */
 package br.com.ifba.cadastro.view;
 
+import org.springframework.stereotype.Component;
 import br.com.ifba.usuario.ValidadorUsuario;
 import javax.swing.JOptionPane;
 
@@ -11,6 +12,7 @@ import javax.swing.JOptionPane;
  *
  * @author xexpl
  */
+@Component
 public class TelaCadastroUsuario extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaCadastroUsuario.class.getName());

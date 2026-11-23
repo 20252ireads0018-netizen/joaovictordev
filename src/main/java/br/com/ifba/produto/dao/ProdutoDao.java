@@ -1,10 +1,12 @@
 package br.com.ifba.produto.dao;
 
+import org.springframework.stereotype.Repository;
 import br.com.ifba.infrastructure.dao.GenericDao;
 import br.com.ifba.produto.entity.Produto;
 import java.util.List;
 
 /** DAO de Produto. O CRUD vem de GenericDao; aqui ficam apenas as consultas do dominio. */
+@Repository
 public class ProdutoDao extends GenericDao<Produto> implements ProdutoIDao {
 
     public ProdutoDao() {

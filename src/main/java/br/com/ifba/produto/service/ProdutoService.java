@@ -1,10 +1,12 @@
 package br.com.ifba.produto.service;
 
+import org.springframework.stereotype.Service;
 import br.com.ifba.infrastructure.exception.RegraNegocioException;
 import br.com.ifba.produto.dao.ProdutoIDao;
 import br.com.ifba.produto.entity.Produto;
 import java.util.List;
 
+@Service
 public class ProdutoService implements ProdutoIService {
 
     static final int TAMANHO_MAXIMO_NOME = 120;

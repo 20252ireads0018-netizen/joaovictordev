@@ -1,5 +1,6 @@
 package br.com.ifba.produto.view;
 
+import org.springframework.stereotype.Component;
 import br.com.ifba.infrastructure.exception.EntidadeNaoEncontradaException;
 import br.com.ifba.infrastructure.exception.PersistenciaException;
 import br.com.ifba.infrastructure.exception.RegraNegocioException;
@@ -24,12 +25,13 @@ import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
 
+@Component
 public class TelaProdutos extends JFrame {
 
     private static final Logger LOGGER = Logger.getLogger(TelaProdutos.class.getName());
 
     private final ProdutoIController controller;
-    private final Runnable abrirCategorias;
+    private final JanelaAuxiliar telaCategorias;
 
     private final JTextField txtBusca = new JTextField(20);
     private final JTextField txtNome = new JTextField();
@@ -47,10 +49,10 @@ public class TelaProdutos extends JFrame {
 
     private Long idSelecionado;
 
-    public TelaProdutos(ProdutoIController controller, Runnable abrirCategorias) {
+    public TelaProdutos(ProdutoIController controller, JanelaAuxiliar telaCategorias) {
         super("Produtos - PGCD");
         this.controller = controller;
-        this.abrirCategorias = abrirCategorias;
+        this.telaCategorias = telaCategorias;
         montarTela();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         carregarTabela(controller::findAll);
@@ -101,7 +103,7 @@ public class TelaProdutos extends JFrame {
             txtBusca.setText("");
             carregarTabela(controller::findAll);
         });
-        btnCategorias.addActionListener(e -> abrirCategorias.run());
+        btnCategorias.addActionListener(e -> telaCategorias.abrir());
         btnCadastrar.addActionListener(e -> cadastrar());
         btnEditar.addActionListener(e -> editar());
         btnExcluir.addActionListener(e -> excluir());
