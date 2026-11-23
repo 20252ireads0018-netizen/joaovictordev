@@ -43,4 +43,4 @@ Em `GenericIDao.java`, o comentário `/** Busca pelo identificador. */` em `find
 
 ## Task 06 - Testes
 
-Todas as mudanças são refatorações e não alteram comportamento. Toda a bateria (`ProdutoServiceTest`, `CategoriaServiceTest`, `ProdutoDaoTest`, `CategoriaDaoTest` e o novo `ValidadorUsuarioTest`) deve continuar verde. O print da execução fica nesta pasta (`testes.png`).
+Todas as mudanças são refatorações e não alteram comportamento. Toda a bateria (`ProdutoServiceTest`, `CategoriaServiceTest`, `ProdutoDaoTest`, `CategoriaDaoTest` e o novo `ValidadorUsuarioTest`) deve continuar verde. O print da execução fica nesta pasta (`testes.jpg`): 43 testes, 100% passando no NetBeans.
