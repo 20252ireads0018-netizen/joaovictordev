@@ -2,6 +2,5 @@
 /target/
 /nbproject/private/
 
-# Credenciais reais do banco ficam fora do repositorio.
-# Versione apenas o persistence.xml.exemplo.
-/src/main/resources/META-INF/persistence.xml
+# Banco H2 local da aplicacao
+/data/

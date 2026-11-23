@@ -1,9 +1,11 @@
 package br.com.ifba.produto.controller;
 
+import org.springframework.stereotype.Controller;
 import br.com.ifba.produto.entity.Produto;
 import br.com.ifba.produto.service.ProdutoIService;
 import java.util.List;
 
+@Controller
 public class ProdutoController implements ProdutoIController {
 
     private final ProdutoIService service;

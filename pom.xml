@@ -8,14 +8,21 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.release>26</maven.compiler.release>
-        <exec.mainClass>com.mycompany.prg04joaovictorbarretopimentel.Prg04JoaoVictorBarretoPimentel</exec.mainClass>
+        <maven.compiler.release>21</maven.compiler.release>
+        <exec.mainClass>br.com.ifba.ProjetoApplication</exec.mainClass>
         <hibernate.version>6.6.15.Final</hibernate.version>
         <flyway.version>10.20.1</flyway.version>
         <junit.version>5.10.3</junit.version>
     </properties>
 
     <dependencies>
+        <!-- Spring: conteiner e varredura de componentes (sem servidor web) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+
         <!-- JPA / Hibernate -->
         <dependency>
             <groupId>org.hibernate.orm</groupId>

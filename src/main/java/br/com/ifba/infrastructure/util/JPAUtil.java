@@ -9,13 +9,10 @@ import jakarta.persistence.Persistence;
  * fornece um EntityManager novo para quem precisar. Quem pede o EntityManager
  * e responsavel por fecha-lo (finally { em.close(); }).
  *
- * A unidade de persistencia pode ser trocada pela propriedade de sistema
- * pgcd.persistence.unit (os testes usam pgcdTestPU, com H2 em memoria).
+ * A unidade de persistencia e a conexao vem do application.properties
+ * (ConfiguracaoBanco); o persistence.xml so lista as entidades.
  */
 public final class JPAUtil {
-
-    private static final String UNIDADE_PADRAO = "pgcdPU";
-    private static final String PROPRIEDADE_UNIDADE = "pgcd.persistence.unit";
 
     private static EntityManagerFactory factory;
 
@@ -24,12 +21,12 @@ public final class JPAUtil {
 
     /** Nome da unidade de persistencia em uso (persistence.xml). */
     public static String getUnidade() {
-        return System.getProperty(PROPRIEDADE_UNIDADE, UNIDADE_PADRAO);
+        return ConfiguracaoBanco.unidade();
     }
 
     private static synchronized EntityManagerFactory getFactory() {
         if (factory == null) {
-            factory = Persistence.createEntityManagerFactory(getUnidade());
+            factory = Persistence.createEntityManagerFactory(getUnidade(), ConfiguracaoBanco.propriedadesJpa());
         }
         return factory;
     }

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  So a definicao da unidade e das entidades. A conexao (URL, usuario, senha)
+  fica no application.properties e e passada ao JPA pelo JPAUtil.
+  O schema e criado pelas migrations do Flyway; o Hibernate apenas valida.
+-->
+<persistence version="3.0" xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd">
+    <persistence-unit name="pgcdPU" transaction-type="RESOURCE_LOCAL">
+        <class>br.com.ifba.produto.entity.Produto</class>
+        <class>br.com.ifba.produto.entity.Categoria</class>
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+    </persistence-unit>
+</persistence>

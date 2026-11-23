@@ -5,6 +5,7 @@
 
 package br.com.ifba.login.view;
 
+import org.springframework.stereotype.Component;
 import javax.swing.ImageIcon;
 import java.awt.Image;
 
@@ -13,6 +14,7 @@ import java.awt.Image;
  *
  * @author xexpl
  */
+@Component
 public class LoginView extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(LoginView.class.getName());

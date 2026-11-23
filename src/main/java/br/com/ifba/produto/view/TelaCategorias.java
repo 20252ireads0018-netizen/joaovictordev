@@ -1,5 +1,6 @@
 package br.com.ifba.produto.view;
 
+import org.springframework.stereotype.Component;
 import br.com.ifba.infrastructure.exception.EntidadeNaoEncontradaException;
 import br.com.ifba.infrastructure.exception.PersistenciaException;
 import br.com.ifba.infrastructure.exception.RegraNegocioException;
@@ -21,7 +22,8 @@ import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
 
-public class TelaCategorias extends JFrame {
+@Component
+public class TelaCategorias extends JFrame implements JanelaAuxiliar {
 
     private static final Logger LOGGER = Logger.getLogger(TelaCategorias.class.getName());
 
@@ -45,6 +47,7 @@ public class TelaCategorias extends JFrame {
         setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
     }
 
+    @Override
     public void abrir() {
         carregarTabela();
         setVisible(true);
